@@ -1,11 +1,14 @@
 const express = require('express');
 const cors = require('cors');
+const { connectionDB } = require('../database/config');
 
 class Server {
     constructor() {
         this.port = process.env.PORT;
         this.app = express();
         this.pathUsers = '/api/users';
+        //cafeDB connecting
+        this.conectarCafeDB();
         //middlewares
         this.middlewares()
         //routes
@@ -24,6 +27,9 @@ class Server {
         this.app.listen(this.port, () => {
             console.log(`Servidor corriendo en el PUERTO: ${this.port}`)
         })
+    }
+    async conectarCafeDB() {
+        await connectionDB();
     }
 }
 
