@@ -7,6 +7,7 @@ class Server {
         this.port = process.env.PORT;
         this.app = express();
         this.pathUsers = '/api/users';
+        this.pathAuth = '/api/auth';
         //cafeDB connecting
         this.conectarCafeDB();
         //middlewares
@@ -21,6 +22,7 @@ class Server {
         this.app.use(express.json());
     }
     routes() {
+        this.app.use(this.pathAuth, require('../routes/auth'));
         this.app.use(this.pathUsers, require('../routes/users'));
     }
     listen() {

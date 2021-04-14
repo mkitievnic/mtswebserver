@@ -1,6 +1,16 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
-const { catchErrors } = require('../middlewares/catchErrors');
+
+/* const { catchErrors } = require('../middlewares/catchErrors');
+const { validateJWT } = require('../middlewares/validateJWT');
+const { isAdmRole, haveOneThisRoles } = require('../middlewares/isAdmRole');
+const { isErasedUser } = require('../middlewares/isErasedUser'); */
+const { catchErrors,
+    validateJWT,
+    isAdmRole,
+    haveOneThisRoles,
+    isErasedUser } = require('../middlewares');
+
 const { isRolValidate, existEmailRegistered, existIdUser } = require('../helpers/db-validators');
 const { usuariosGet,
     usuariosPost,
@@ -30,6 +40,10 @@ router.put('/:id', [
     catchErrors
 ], usuariosPut);
 router.delete('/:id', [
+    validateJWT,
+    /* isAdmRole, */
+    haveOneThisRoles('Adm', 'Adv'),
+    isErasedUser,
     check('id', 'The id no is a mongoId valid').isMongoId(),
     check('id').custom(existIdUser),
     catchErrors

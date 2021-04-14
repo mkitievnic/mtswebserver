@@ -55,8 +55,9 @@ usuariosPut = async (req, res) => {
 }
 usuariosDelete = async (req, res) => {
     const { id } = req.params;
-    const user = await User.findByIdAndUpdate(id, { state: false });
-    res.json(user);
+    const userDelete = await User.findByIdAndUpdate(id, { state: false });
+    const userAuth = req.user;
+    res.json({ userDelete, userAuth });
 }
 usuariosPatch = (req, res) => {
     res.json({
