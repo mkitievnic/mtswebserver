@@ -21,7 +21,8 @@ const userSchema = Schema({
     role: {
         type: String,
         required: [true, "the role is required"],
-        enum: ['Adm', 'Adv', 'Med', 'Ini']
+        enum: ['Adm', 'Adv', 'Med', 'Ini'],
+        default: 'Ini'
     },
     img: {
         type: String

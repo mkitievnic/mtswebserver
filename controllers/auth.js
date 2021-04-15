@@ -3,6 +3,7 @@ const bcryptjs = require('bcryptjs');
 
 const User = require('../models/user');
 const { generateJWT } = require('../helpers/generateJWT');
+const { verifyGoogleSignIn } = require('../helpers/validator-googlesignin');
 
 const login = async (req, res = response) => {
     const { email, pasword } = req.body;
@@ -45,6 +46,44 @@ const login = async (req, res = response) => {
 
 }
 
+const googleSignIn = async (req, res = response) => {
+    const { id_token } = req.body
+    try {
+        const payload = await verifyGoogleSignIn(id_token);
+        const { name, picture: img, email } = payload;
+
+        //Verify if the user exist, if no exist, it have to be created.
+        let user = await User.findOne({ email });
+        if (!user) {
+            let data = {
+                name,
+                img,
+                email,
+                pasword: 'algo',
+                google: true
+            }
+            user = new User(data);
+            await user.save();
+        }
+        //Verify if the user was erased
+        if (!user.state) {
+            return res.status(401).json({
+                msg: "User unautorized."
+            })
+        }
+        //generate jwt
+        const token = await generateJWT(user._id);
+        res.json({
+            token,
+            user
+        })
+    } catch (error) {
+        res.status(401).json({
+            msg: "token invalid."
+        })
+    }
+}
 module.exports = {
-    login
+    login,
+    googleSignIn
 }
