@@ -1,5 +1,5 @@
 const { request, response } = require("express");
-const User = require('../models/user');
+const { User } = require('../models');
 
 const isErasedUser = async (req = request, res = response, next) => {
     const { id } = req.params;
